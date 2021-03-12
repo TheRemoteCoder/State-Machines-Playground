@@ -21,6 +21,7 @@
     "jsdom": "^16.5.0",
     "prettier": "^2.2.1",
     "prettier-eslint": "^11.0.0",
+    "robot3": "^0.2.19",
     "xstate": "^4.16.2"
   }
 }
