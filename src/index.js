@@ -8,7 +8,7 @@ const box  = document.getElementById('box');
 const html = document.querySelector('html');
 
 
-// --------------------------------------------------------------- Machine
+// --------------------------------------------------------------------------------------------------------------------------------- Machine
 
 /**
  * State maachine 'blueprint' for other code to act upon.
@@ -83,7 +83,7 @@ const dragDropMachine = Machine({
 });
 
 
-// --------------------------------------------------------------- Service
+// --------------------------------------------------------------------------------------------------------------------------------- Service
 
 /**
  * Responsible to make state machine 'alive'
@@ -91,6 +91,7 @@ const dragDropMachine = Machine({
  *
  * Internally
  * - onTransition runs automatically with initial state
+ * - onTransition also reacts on state context changes (not just states)
  * - State tracker to interact with code/UI
  */
 const dragDropService = interpret(dragDropMachine)
@@ -101,7 +102,7 @@ const dragDropService = interpret(dragDropMachine)
 
     console.log(state.value, state.changed, state.context);
 
-    // Box position + How far it moved
+    // Box position + How far it moved (not centered, good enough here ...)
     box.style.left = state.context.x + state.context.dx + 'px';
     box.style.top  = state.context.y + state.context.dy + 'px';
 
@@ -110,7 +111,7 @@ const dragDropService = interpret(dragDropMachine)
   .start();
 
 
-// -------------------------------------------------------------------- UI
+// -------------------------------------------------------------------------------------------------------------------------------------- UI
 
 box.addEventListener('mousedown', event => {
   dragDropService.send(event);
