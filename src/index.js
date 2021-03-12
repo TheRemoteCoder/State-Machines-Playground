@@ -1,5 +1,11 @@
 // global variable: window.XState
-const { interpret, Machine } = XState; 
+const { assign, interpret, Machine } = XState; 
+
+// 27ff : https://www.youtube.com/watch?v=uRfQJJArZEg
+// Potential issue (with JS): Listen on html, not box, else it might not always fire (?) -> 
+// Also for mouse events: Cursor can sometimes be faster than the element moves, which breaks events!
+const box  = document.getElementById('box');
+const html = document.querySelector('html');
 
 
 // --------------------------------------------------------------- Machine
@@ -16,19 +22,61 @@ const { interpret, Machine } = XState;
 const dragDropMachine = Machine({
   id      : 'dragdrop',
   initial : 'idle',
-  context : {},
+  context : {
+    x  : 0, // Box position
+    y  : 0,
+    dx : 0, // Distance (far from click)
+    dy : 0,
+    pointerX : 0, // Click position
+    pointerY : 0,
+  },
   states: {
     idle: {
       on: {
         mousedown: {
           target: 'dragging',
+          
+          // Side effects
+          // Don't mutate state directly but return new state (Redux style)
+          actions: assign((context, mouseEvent) => {
+            return {
+              ...context,
+              pointerX : mouseEvent.clientX,
+              pointerY : mouseEvent.clientY,
+            };
+          }),
         },
       },
     },
     dragging: {
       on: {
-        // Shorthand version of above
-        mouseup: 'idle',
+        // State stays same here
+        mousemove: {
+          target: 'dragging',
+          actions: assign((context, mouseEvent) => {
+            return {
+              ...context,
+              dx : mouseEvent.clientX - context.pointerX,
+              dy : mouseEvent.clientY - context.pointerY,
+            };
+          }),
+        },
+
+        // Change to next state
+        // Shorthand version of {target:...}
+        //mouseup: 'idle',
+        mouseup: {
+          target: 'idle',
+          actions: assign((context, mouseEvent) => {
+            return {
+              ...context,
+              x : context.x + context.dx,
+              y : context.y + context.dy,
+              dx : 0,
+              dy : 0,
+            };
+          }),
+        },
       },
     },
   },
@@ -47,7 +95,15 @@ const dragDropMachine = Machine({
  */
 const dragDropService = interpret(dragDropMachine)
   .onTransition(state => {
-    console.log(state.value);
+    if (!state.changed) {
+      return;
+    }
+
+    console.log(state.value, state.changed, state.context);
+
+    // Box position + How far it moved
+    box.style.left = state.context.x + state.context.dx + 'px';
+    box.style.top  = state.context.y + state.context.dy + 'px';
 
     document.body.dataset.state = state.toStrings().join(' ');
   })
@@ -56,25 +112,19 @@ const dragDropService = interpret(dragDropMachine)
 
 // -------------------------------------------------------------------- UI
 
-const box  = document.getElementById('box');
-const html = document.querySelector('html');
-
 box.addEventListener('mousedown', event => {
-  dragDropService.send('mousedown');
+  dragDropService.send(event);
 });
 
-
-// 27ff : https://www.youtube.com/watch?v=uRfQJJArZEg
-// Potential issue (with JS): Listen on body, not box,
-// else it might not always fire (?) -> Also for mouse events:
-// the cursor can sometimes be faster than the element moves,
-// which breaks events!
+html.addEventListener('mousemove', event => {
+  dragDropService.send(event);
+});
 
 html.addEventListener('mouseup', event => {
-  dragDropService.send('mouseup');
+  dragDropService.send(event);
 });
 
 html.addEventListener('dragend', event => {
-  dragDropService.send('mouseup');
+  dragDropService.send(event);
 });
 
