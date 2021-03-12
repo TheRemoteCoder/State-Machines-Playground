@@ -1,0 +1,39 @@
+{
+  "name": "xstate-test",
+  "license": "UNLICENSED",
+  "private": "true",
+  "scripts": {
+    "start": "node -r esm src/js/drag-drop.js",
+    "format": "prettier \"tests/**/*.js\" --write",
+    "lint": "npx eslint \"tests/**/*.js\"",
+    "project:clean": "rm -rf dist",
+    "project:reset": "rm -rf node_modules"
+  },
+  "dependencies": {
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "firebase": "^8.2.6",
+    "graphiql": "^1.4.0",
+    "graphql": "^15.5.0",
+    "graphql-tools": "^7.0.3",
+    "helmet": "^4.4.1",
+    "jsdom": "^16.5.0",
+    "lodash": "^4.17.20",
+    "mongodb": "^3.6.4",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^11.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "xstate": "^4.16.2"
+  }
+}
