@@ -3,7 +3,7 @@
   "license": "UNLICENSED",
   "private": "true",
   "scripts": {
-    "start": "node -r esm src/js/drag-drop.js",
+    "start": "node -r esm src/js/node/drag-drop.js",
     "format": "prettier \"tests/**/*.js\" --write",
     "lint": "npx eslint \"tests/**/*.js\"",
     "project:clean": "rm -rf dist",
