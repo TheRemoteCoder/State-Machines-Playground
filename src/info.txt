@@ -1,4 +1,0 @@
-Untested!
-
-- JS modules require HTTP:// protocol
-
