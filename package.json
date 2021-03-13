@@ -1,9 +1,13 @@
 {
-  "name": "xstate-test",
+  "name": "state-machines-playground",
   "license": "UNLICENSED",
   "private": "true",
   "scripts": {
-    "start": "node -r esm src/js/node/drag-drop.js",
+    "start": "npm run start:r:engine",
+    "start:r:engine": "node -r esm src/js/node/engine.js",
+    "start:x:dragdrop": "node -r esm src/js/node/drag-drop.js",
+    "start:x:resolvereject": "node -r esm src/js/node/resolve-reject.js",
+    "start:x:toggle": "node -r esm src/js/node/toggle.js",
     "format": "prettier \"tests/**/*.js\" --write",
     "lint": "npx eslint \"tests/**/*.js\"",
     "project:clean": "rm -rf dist",
