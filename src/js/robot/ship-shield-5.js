@@ -38,8 +38,14 @@ const getDataFromPromiseOrOtherMachine = () =>
 
 // Mini demo machine for nested/dependent state
 const innerMachine = createMachine({
-  off: state(transition('toggle', 'on')),
-  on: state(transition('toggle', 'off')),
+  idle: state(
+    transition('toggle', 'finished',
+      reduce((ctx, ev) => {
+        console.warn('> innerMachine: transition() - reduce()')
+        return ctx
+      })
+    )
+  ),
   finished: final()
 })
 
@@ -55,7 +61,7 @@ const outerMachine = createMachine({
     //getDataFromPromiseOrOtherMachine,
     transition('done', 'on',
       reduce((ctx, ev) => {
-        console.warn('> transition() - reduce()')
+        console.warn('> outerMachine: transition() - reduce()')
         // console.log(ctx)
         return ctx
       })
@@ -71,9 +77,21 @@ const outerMachine = createMachine({
 
 // ----------------------------------------------------------------------------------------- Service
 
+// Might not be needed, but seems better for debugging
+const innerService = interpret(innerMachine, () => {
+  console.warn('> innerMachine: interpret()')
+  console.log('innerMachine', innerMachine)
+
+  view()
+})
+
 const service = interpret(outerMachine, (innerService) => {
-  console.warn('> interpret()')
+  console.warn('> outerMachine: interpret()')
+  console.log('service', service)
   console.log('innerService', innerService)
+
+  // ???
+  // if(service === innerService) {}
 
   view()
 })
@@ -104,4 +122,11 @@ function view () {
 view()
 
 command('toggle') // On
-// command('toggle') // Off
+
+console.log('service.child', service.child) // {machine ...}
+// service.child.send('toggle') // On -> Finished (dynamic, but might be less obvious)
+innerService.send('toggle')     // On -> Finished (static/hardcoded, but more clear)
+console.log('service.child', service.child) // undefined
+
+command('toggle') // On
+command('toggle') // Off
