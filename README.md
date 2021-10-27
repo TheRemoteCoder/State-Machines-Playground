@@ -1,6 +1,18 @@
 # State machines
 
-## XState
+- [Use](#use)
+- [Technologies](#technologies)
 
-- https://xstate.js.org/docs
+---
+
+## Use
+
+- Run via Browser -or- NPM (see script commands)
+
+---
+
+## Technologies
+
+- Robot3: https://thisrobot.life
+- XState: https://xstate.js.org
 

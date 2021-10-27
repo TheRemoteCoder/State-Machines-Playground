@@ -1,11 +1,11 @@
-#box {
+.box {
   position: absolute;
   background: teal;
   width: 100px;
   height: 100px;
 }
 
-[data-state="dragging"] #box {
+[data-state="dragging"] .box {
   background: orange;
 }
 
