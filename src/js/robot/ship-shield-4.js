@@ -58,7 +58,7 @@ const machineContext = (initialContext) => ({
 })
 
 // - Guards will always be called first (before reduce) - if defined
-//   - If Guard fails,
+//   - If Guard fails, the state is kept and won't change
 const machine = createMachine({
   off: state(
     guard(guardCanUpdate),
@@ -87,7 +87,6 @@ const machine = createMachine({
 
 const service = interpret(machine, () => {
   console.warn('> interpret()')
-  // console.log('initialContext', initialContext)
   console.log('machineContext', machineContext)
 
   view()
@@ -98,7 +97,6 @@ const service = interpret(machine, () => {
 
 function command (action /* , data */) {
   console.warn('## command()')
-  // console.log(action, data)
   console.log(action)
 
   // service.send(action, data)
@@ -120,9 +118,9 @@ function view () {
 
 view()
 
-command('toggle')      // On
-command('xxx')         // Nothing happens
-command('toggle')      // Off
-// command('dissolve') // Works only under 'Off'
-command('toggle')      // Finished
-command('toggle')      // (Finished)
+command('toggle')    // On
+command('xxx')       // Nothing happens
+command('toggle')    // Off
+command('dissolve') // Works only under 'Off'
+command('toggle')   // Finished
+command('toggle')   // (Finished)

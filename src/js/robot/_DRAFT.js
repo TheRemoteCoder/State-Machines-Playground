@@ -1,17 +1,17 @@
 /**
  * Showcase
- * - 
+ * -
  */
 
-import { 
-  createMachine, 
+import {
+  createMachine,
   // guard,
-  // immediate, 
-  interpret, 
-  // invoke, 
+  // immediate,
+  interpret,
+  // invoke,
   // reduce,
-  state, 
-  state as final, 
+  state,
+  state as final,
   transition
   } from '/node_modules/robot3/machine.js'
 
@@ -61,8 +61,8 @@ const service = interpret(machine, () => {
 /* * /
 function updateContext (ctx, event) {
   const newContext = {
-    ...ctx, 
-    shieldUses: ctx.shieldUses-- 
+    ...ctx,
+    shieldUses: ctx.shieldUses--
   }
 
   console.warn('> updateContext()')
@@ -91,8 +91,8 @@ function view () {
 // --------------------------------------------------------------------------------------------- Run
 
 view()
+
 command('toggle')   // On
 command('toggle')   // Off
 //command('dissolve') // Finished
 //command('toggle')   // Finished (ignored)
-
