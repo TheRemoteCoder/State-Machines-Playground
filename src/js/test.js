@@ -11,7 +11,7 @@ import {
   reduce,
   state, 
   transition
-  } from '/node_modules/robot3';
+  } from '/node_modules/robot3/machine.js';
 
 
 // ------------------------------------------------------------------------------------------------------------------------------- Constants

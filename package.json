@@ -4,8 +4,6 @@
   "private": "true",
   "scripts": {
     "start": "npx http-server -p 8080 -o src/",
-    "start:script": "node run.js",
-    "start:serve": "live-server --entry-file=src/index.html",
     "start:machine": "node -r esm src/js/EXAMPLE.js",
     "format": "prettier \"tests/**/*.js\" --write",
     "lint": "npx eslint \"tests/**/*.js\"",
