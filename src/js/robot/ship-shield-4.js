@@ -3,6 +3,10 @@
  * - Context + Reduce
  * - Commands + Data (empty)
  *
+ * Hint: guard() is best good to use with immediate(),
+ * to determine which (of multiple) states to apply.
+ *
+ * @see https://thisrobot.life/api/transition.html - Transition order with guard
  * @see https://thisrobot.life/api/interpret.html
  */
 
@@ -57,12 +61,18 @@ const machineContext = (initialContext) => ({
   shieldUses: initialContext.shieldUses
 })
 
-// - Guards will always be called first (before reduce) - if defined
-//   - If Guard fails, the state is kept and won't change
+/**
+ * - Guards will always be called first (before reduce) - if defined
+ * - If Guard fails, the state is kept and won't change
+ *
+ * example: state(
+ *    immediate('state1', guard(canDoX)), immediate('state2')
+ *  )
+ */
 const machine = createMachine({
   off: state(
-    guard(guardCanUpdate),
     transition('toggle', 'on',
+      guard(guardCanUpdate),
       // Shorthand notation to return object
       // reduce((ctx, action) => ({ ...ctx, users: ev.data })))
       reduce((ctx, action) => {
@@ -74,6 +84,7 @@ const machine = createMachine({
         return newContext
       }),
     ),
+    transition('toggle', 'finished'),
     transition('dissolve', 'finished'),
   ),
   on: state(
@@ -96,7 +107,7 @@ const service = interpret(machine, () => {
 // --------------------------------------------------------------------------------------- Functions
 
 function command (action /* , data */) {
-  console.warn('## command()')
+  console.warn('#### command()')
   console.log(action)
 
   // service.send(action, data)
@@ -109,7 +120,7 @@ function view () {
     state: service.machine.state,
   }
 
-  console.warn('#### view()')
+  console.warn('### view()')
   console.log(details)
 }
 
@@ -120,7 +131,7 @@ view()
 
 command('toggle')    // On
 command('xxx')       // Nothing happens
-command('toggle')    // Off
 command('dissolve') // Works only under 'Off'
+command('toggle')    // Off
 command('toggle')   // Finished
 command('toggle')   // (Finished)
