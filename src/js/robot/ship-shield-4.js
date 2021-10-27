@@ -9,6 +9,7 @@
 import {
   createMachine,
   interpret,
+  guard,
   reduce,
   state,
   state as final,
@@ -32,8 +33,20 @@ function getUpdatedContext (ctx) {
   }
 
   console.warn('> updateContext()')
+  console.log(newContext)
 
   return newContext
+}
+
+// ------------------------------------------------------------------------------------------ Guards
+
+function guardCanUpdate (ctx) {
+  const canUpdate = (ctx.shieldUses > 0)
+
+  console.warn('> guardCanUpdate()')
+  console.log(ctx, canUpdate)
+
+  return canUpdate
 }
 
 
@@ -47,6 +60,7 @@ const machineContext = (initialContext) => ({
 const machine = createMachine({
   off: state(
     transition('toggle', 'on',
+      guard(guardCanUpdate),
       // Shorthand notation to return object
       // reduce((ctx, action) => ({ ...ctx, users: ev.data })))
       reduce((ctx, action) => {
@@ -57,13 +71,14 @@ const machine = createMachine({
 
         return newContext
       })
-    )
+    ),
+    transition('toggle', 'finished'),
     //transition('dissolve', 'finished'),
   ),
   on: state(
     transition('toggle', 'off'),
   ),
-  //finished: final()
+  finished: final()
 }, machineContext)
 
 
@@ -74,19 +89,18 @@ const service = interpret(machine, () => {
   console.log('initialContext', initialContext)
   console.log('machineContext', machineContext)
 
-  initialContext.shieldUses = 100
-  machineContext.shieldUses = 50
-
   view()
 }, initialContext)
 
 
 // --------------------------------------------------------------------------------------- Functions
 
-function command (action, data) {
+function command (action /* , data */) {
   console.warn('## command()')
-  console.log(action, data)
-  service.send(action, data)
+  // console.log(action, data)
+
+  // service.send(action, data)
+  service.send(action)
 }
 
 function view () {
@@ -103,5 +117,8 @@ function view () {
 // --------------------------------------------------------------------------------------------- Run
 
 view()
+
 command('toggle') // On
 command('toggle') // Off
+command('toggle') // Finished
+command('toggle') // (Finished)

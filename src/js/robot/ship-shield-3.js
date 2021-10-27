@@ -3,12 +3,12 @@
  * - Immediate state (set default)
  */
 
-import { 
-  createMachine, 
-  immediate, 
-  interpret, 
-  state, 
-  state as final, 
+import {
+  createMachine,
+  immediate,
+  interpret,
+  state,
+  state as final,
   transition
   } from '/node_modules/robot3/machine.js'
 
@@ -34,8 +34,6 @@ const machine = createMachine({
 
 const service = interpret(machine, () => {
   console.warn('> interpret()')
-
-  view()
 })
 
 
@@ -62,6 +60,6 @@ function view () {
 // --------------------------------------------------------------------------------------------- Run
 
 view()
+
 command('toggle') // On
 command('toggle') // Off
-

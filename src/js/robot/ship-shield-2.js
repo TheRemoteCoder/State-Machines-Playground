@@ -3,11 +3,11 @@
  * - Final state (Idea: Remove feature fully on command)
  */
 
-import { 
-  createMachine, 
-  interpret, 
-  state, 
-  state as final, 
+import {
+  createMachine,
+  interpret,
+  state,
+  state as final,
   transition
   } from '/node_modules/robot3/machine.js'
 
@@ -31,8 +31,6 @@ const machine = createMachine({
 
 const service = interpret(machine, () => {
   console.warn('> interpret()')
-
-  view()
 })
 
 
@@ -64,4 +62,3 @@ command('toggle')   // On
 command('toggle')   // Off
 command('dissolve') // Finished
 command('toggle')   // Finished (ignored)
-
