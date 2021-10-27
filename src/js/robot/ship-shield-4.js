@@ -73,7 +73,7 @@ const machine = createMachine({
       })
     ),
     transition('toggle', 'finished'),
-    //transition('dissolve', 'finished'),
+    transition('dissolve', 'finished'),
   ),
   on: state(
     transition('toggle', 'off'),
@@ -98,6 +98,7 @@ const service = interpret(machine, () => {
 function command (action /* , data */) {
   console.warn('## command()')
   // console.log(action, data)
+  console.log(action)
 
   // service.send(action, data)
   service.send(action)
@@ -109,7 +110,7 @@ function view () {
     state: service.machine.state,
   }
 
-  console.warn('## view()')
+  console.warn('#### view()')
   console.log(details)
 }
 
@@ -118,7 +119,9 @@ function view () {
 
 view()
 
-command('toggle') // On
-command('toggle') // Off
-command('toggle') // Finished
-command('toggle') // (Finished)
+command('toggle')      // On
+command('xxx')         // Nothing happens
+command('toggle')      // Off
+// command('dissolve') // Works only under 'Off'
+command('toggle')      // Finished
+command('toggle')      // (Finished)
