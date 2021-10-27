@@ -1,7 +1,3 @@
-/**
- * @todo - Guard condition does not work here
- */
-
 import { 
   createMachine, 
   guard, 
@@ -11,85 +7,77 @@ import {
   reduce,
   state, 
   transition
-  } from '/node_modules/robot3/machine.js';
+  } from '/node_modules/robot3/machine.js'
 
 
-// ------------------------------------------------------------------------------------------------------------------------------- Constants
+// --------------------------------------------------------------------------------------- Constants
 
-// 0|1 = 0|100%
-const context = () => ({
-  charged: 0,
-});
-
-
-// ------------------------------------------------------------------------------------------------------------------------------- Functions
-
-function canWork (ctx) {
-  console.log('> GUARD: canWork');
-  console.log(ctx.charged, ctx.charged === 1);
-
-  return ctx.charged === 1;
-}
+const initialContext = () => ({
+  shieldEnergy: 5, // ^= 5 uses possible
+})
 
 
-function updateContext (ctx, ev) {
-  console.log('> REDUCE: updateContext');
-  console.log({...ctx, charged: ctx.charged++});
+// ----------------------------------------------------------------------------------------- Machine
 
-  return {
-    ...ctx, 
-    charged: ctx.charged++ 
-  };
-}
+const machineContext = (initialContext) => ({
+  shieldEnergy: initialContext.shieldEnergy
+})
 
-
-function view () {
-  const currentState = service.machine.state;
-
-  console.log('> RUN: view', currentState);
-}
-
-
-// --------------------------------------------------------------------------------------------------------------------------------- Machine
-
+// 1st listed state = Initial/Default state
 const machine = createMachine({
-  idle: state(
-    transition('start', 'warmup')
+  off: state(
+    transition('toggle', 'on')
   ),
-  warmup: state(
-    /* * /
-    transition('start', 'working', 
-      guard(canWork), 
-      reduce(updateContext),
-    ),
-    /* */
-    transition('stop', 'cooldown')
-  ),
-  working: state(
-    transition('stop', 'cooldown')
-  ),
-  cooldown: state(
-    transition('stop', 'idle')
-  ),
-}, context);
+  on: state(
+    transition('toggle', 'off')
+  )
+}, )
+// }, machineContext)
 
 
-// --------------------------------------------------------------------------------------------------------------------------------- Service
+// ----------------------------------------------------------------------------------------- Service
 
 const service = interpret(machine, () => {
-  console.log('> interpret');
-  console.log(context.toString());
+  console.warn('> interpret()')
+  console.log(initialContext)
 
-  view();
-}, context);
+  view()
+}, initialContext)
 
 
-// ------------------------------------------------------------------------------------------------------------------------------------- Run
+// --------------------------------------------------------------------------------------- Functions
 
-view();                // idle
+function updateContext (ctx, event) {
+  const newContext = {
+    ...ctx, 
+    charged: ctx.charged++ 
+  }
 
-service.send('start'); // warmup
-service.send('start'); // warmup (ignored)
-service.send('stop');  // cooldown
-service.send('stop');  // idle !
+  console.warn('> updateContext()')
+  console.log(newContext, event)
+
+  return newContext
+}
+
+function command (action) {
+  console.warn('## command()')
+  service.send(action)
+}
+
+function view () {
+  const details = {
+    current: service.machine.current,
+    state: service.machine.state,
+  }
+
+  console.warn('## view()')
+  console.log(details)
+}
+
+
+// --------------------------------------------------------------------------------------------- Run
+
+view()
+command('toggle')
+command('toggle')
 
