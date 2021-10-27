@@ -27,23 +27,32 @@ function sideEffect(ctx) {
   console.log(ctx)
 }
 
-// Promise returns will automatically trigger 'done' or 'error' state transitions
-// from the service
-const loadTodos = () =>
+// Promise returns will automatically trigger 'done' or 'error' state transitions from the service.
+// Alternatively, you can use another machine (from createMachine) here.
+const getDataFromPromiseOrOtherMachine = () =>
   /** / Promise.reject({ exampleData: true }) /**/
   /**/ Promise.resolve({ exampleData: true }) /**/
 
 
-// ----------------------------------------------------------------------------------------- Machine
+// ---------------------------------------------------------------------------------------- Machines
 
-const machine = createMachine({
+// Mini demo machine for nested/dependent state
+const innerMachine = createMachine({
+  off: state(transition('toggle', 'on')),
+  on: state(transition('toggle', 'off')),
+  finished: final()
+})
+
+// Side note: invoke() can use features of state() - e.g. immediate()
+const outerMachine = createMachine({
   off: state(
     transition('toggle', 'loading',
       action(sideEffect)
     ),
   ),
   loading: invoke(
-    loadTodos,
+    innerMachine,
+    //getDataFromPromiseOrOtherMachine,
     transition('done', 'on',
       reduce((ctx, ev) => {
         console.warn('> transition() - reduce()')
@@ -62,8 +71,9 @@ const machine = createMachine({
 
 // ----------------------------------------------------------------------------------------- Service
 
-const service = interpret(machine, () => {
+const service = interpret(outerMachine, (innerService) => {
   console.warn('> interpret()')
+  console.log('innerService', innerService)
 
   view()
 })
