@@ -6,15 +6,12 @@
  * @see https://thisrobot.life/api/interpret.html
  */
 
-import { 
-  createMachine, 
-  // guard,
-  // immediate, 
-  interpret, 
-  // invoke, 
-  // reduce,
-  state, 
-  state as final, 
+import {
+  createMachine,
+  interpret,
+  reduce,
+  state,
+  state as final,
   transition
   } from '/node_modules/robot3/machine.js'
 
@@ -26,25 +23,48 @@ const initialContext = {
 }
 
 
+// ----------------------------------------------------------------------------------------- Context
+
+function getUpdatedContext (ctx) {
+  const newContext = {
+    ...ctx,
+    shieldUses: ctx.shieldUses - 1
+  }
+
+  console.warn('> updateContext()')
+
+  return newContext
+}
+
+
 // ----------------------------------------------------------------------------------------- Machine
 
-const machineContext = (initialContext) => {
+// Shorthand notation to return object
+const machineContext = (initialContext) => ({
   shieldUses: initialContext.shieldUses
-}
+})
 
 const machine = createMachine({
   off: state(
     transition('toggle', 'on',
-      reduce((ctx, ev) => {})
-    ),
+      // Shorthand notation to return object
+      // reduce((ctx, action) => ({ ...ctx, users: ev.data })))
+      reduce((ctx, action) => {
+        const newContext = getUpdatedContext(ctx)
+
+        console.warn('> transition() - reduce()')
+        console.log(action, ctx, newContext)
+
+        return newContext
+      })
+    )
     //transition('dissolve', 'finished'),
   ),
   on: state(
     transition('toggle', 'off'),
   ),
   //finished: final()
-})
-// }, machineContext)
+}, machineContext)
 
 
 // ----------------------------------------------------------------------------------------- Service
@@ -53,34 +73,15 @@ const service = interpret(machine, () => {
   console.warn('> interpret()')
   console.log('initialContext', initialContext)
   console.log('machineContext', machineContext)
-  
-  initialContext.shieldUses = 100;
-  machineContext.shieldUses = 50;
-  
+
+  initialContext.shieldUses = 100
+  machineContext.shieldUses = 50
+
   view()
 }, initialContext)
 
 
 // --------------------------------------------------------------------------------------- Functions
-
-/* * /
-transition('start', 'working', 
-  guard(canWork), 
-  reduce(updateContext),
-),
-
-function updateContext (ctx, event) {
-  const newContext = {
-    ...ctx, 
-    shieldUses: ctx.shieldUses-- 
-  }
-
-  console.warn('> updateContext()')
-  console.log(newContext, event)
-
-  return newContext
-}
-/* */
 
 function command (action, data) {
   console.warn('## command()')
@@ -104,4 +105,3 @@ function view () {
 view()
 command('toggle') // On
 command('toggle') // Off
-
