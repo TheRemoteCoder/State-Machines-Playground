@@ -57,10 +57,12 @@ const machineContext = (initialContext) => ({
   shieldUses: initialContext.shieldUses
 })
 
+// - Guards will always be called first (before reduce) - if defined
+//   - If Guard fails,
 const machine = createMachine({
   off: state(
+    guard(guardCanUpdate),
     transition('toggle', 'on',
-      guard(guardCanUpdate),
       // Shorthand notation to return object
       // reduce((ctx, action) => ({ ...ctx, users: ev.data })))
       reduce((ctx, action) => {
@@ -70,9 +72,8 @@ const machine = createMachine({
         console.log(action, ctx, newContext)
 
         return newContext
-      })
+      }),
     ),
-    transition('toggle', 'finished'),
     transition('dissolve', 'finished'),
   ),
   on: state(
@@ -86,7 +87,7 @@ const machine = createMachine({
 
 const service = interpret(machine, () => {
   console.warn('> interpret()')
-  console.log('initialContext', initialContext)
+  // console.log('initialContext', initialContext)
   console.log('machineContext', machineContext)
 
   view()
