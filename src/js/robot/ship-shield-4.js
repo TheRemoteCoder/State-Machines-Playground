@@ -71,6 +71,8 @@ const machineContext = (initialContext) => ({
  */
 const machine = createMachine({
   off: state(
+    // 1.1. Try to switch 'on', if guard allows it.
+    // - If allowed, reducer runs last and changes context
     transition('toggle', 'on',
       guard(guardCanUpdate),
       // Shorthand notation to return object
@@ -84,7 +86,11 @@ const machine = createMachine({
         return newContext
       }),
     ),
+    // 1.2. If guard disallows the transition, this is the automatically applied fallback.
+    // - Note this runs for the exact same state name and MUST come afterwards.
     transition('toggle', 'finished'),
+
+    // 2. Any other transition to trigger from here
     transition('dissolve', 'finished'),
   ),
   on: state(
