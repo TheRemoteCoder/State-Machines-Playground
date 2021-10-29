@@ -22,9 +22,10 @@ const machine = createMachine({
 
 const service = interpret(machine)
   .onTransition((state) => {
-  console.warn('# onTransition()')
-    console.log(state.value)
-  })
+    console.warn('# onTransition()')
+      console.log(state.value)
+    }
+  )
   .start()
 
 

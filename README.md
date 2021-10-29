@@ -3,6 +3,7 @@
 - [About](#about)
 - [Use](#use)
 - [Technologies](#technologies)
+- [Sources](#sources)
 
 ---
 
@@ -10,8 +11,10 @@
 
 Comparison of Robot and XState for basic concepts and API features.
 
-Test scenario is a state machine imaginable for a Sci-Fi game, where players
-have a space ship which can activate a shield (limited times).
+The basic test scenario for both is a state machine imaginable for a Sci-Fi game, 
+where players have a space ship which can activate a shield (limited times).
+
+Besides that, some arbitrary advanced concepts are tested and experimented on.
 
 ---
 
@@ -23,5 +26,12 @@ have a space ship which can activate a shield (limited times).
 
 ## Technologies
 
-- Robot3: https://thisrobot.life
+- Robot: https://thisrobot.life
 - XState: https://xstate.js.org
+
+---
+
+## Sources
+
+- https://xstate.js.org/docs/guides/introduction-to-state-machines-and-statecharts
+

@@ -24,9 +24,11 @@ const machine = createMachine({
 
 const service = interpret(machine)
   .onTransition((state) => {
-  console.warn('# onTransition()')
-    console.log(state.value)
-  })
+    console.warn('# onTransition()')
+      console.log(state)
+      console.log(state.matches('off'))
+    }
+  )
   .start()
 
 
@@ -35,3 +37,4 @@ const service = interpret(machine)
 service.send('TOGGLE') // Off -> On
 service.send('TOGGLE') // On -> Off
 service.send('TOGGLE') // Off -> On
+
