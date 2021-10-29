@@ -7,6 +7,10 @@
 
 ## General
 
+### Basics
+
+- [ ] Read: https://github.com/eggheadio-projects/introduction-to-state-machines-using-xstate-notes
+
 ### Code
 
 - [ ] Best practices - Debugging, Testing
