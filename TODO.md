@@ -23,6 +23,21 @@
 - [ ] Self-transitioning state loop
   - Wait for data, get data, wait again (for more), ... (simple concat output)
 
+#### Advanced
+
+- [ ] Shield concept
+  - States       : Off, On
+  - Transitions  : Charging, Shutting down, Depleting
+  - Properties   : Energy, Runtime/Duration (if on)
+  - Guards       : Time left?, Depleted?
+  - Loops        : On (Deplete)
+  - Actions      : Deplete (if running, if requested by other entity, ...)
+    - Internal/External property changes
+    - Self-modifying state capability?
+  - Interactions : Can be depleted by () ...
+    - Aka: Side effects with other entities
+    - Similar to guards (or same?)
+
 ### Design
 
 - [ ] How to create UI from diagrams only?
