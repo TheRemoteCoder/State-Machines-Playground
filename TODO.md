@@ -23,6 +23,11 @@
 - [ ] Self-transitioning state loop
   - Wait for data, get data, wait again (for more), ... (simple concat output)
 
+### Design
+
+- [ ] How to create UI from diagrams only?
+  - Do they still need 'old fashioned' booleans for display conditions?
+
 ### Diagrams
 
 Use basic diagrams from 'XState' tutorial and re-create for own demo project.
